@@ -26,16 +26,20 @@ const matris = {
   ]
 }
  function matrixFillTable(matris){
+   console.log(matris.point.y);
+
   matris.shape.forEach((row, y) => {
     row.forEach((value ,x) => {
-
+      if(value === 1){
+        contextTable[y+matris.point.y][x+matris.point.x] = 1
+      }
     })
   })
+  console.log(contextTable);
 }
 //偵測底部有沒有撞到
 function isCollision(matris) {
   let isCollision = false
-  console.log(matris.point.y);
   matris.shape.forEach((row, y) => {
     row.forEach((value, x) => {
       // console.log(matris.shape[y][x]);
@@ -43,10 +47,19 @@ function isCollision(matris) {
       if(value === 1){
         try {
           if(contextTable[y+matris.point.y+1][x+matris.point.x] !== 0){
+            matrixFillTable(matris)
             isCollision = true
+            return isCollision
           }
+          // console.log(contextTable[y+matris.point.y+1][x+matris.point.x]);
+          // else if(contextTable[y+matris.point.y+1][x+matris.point.x] === 1){
+          //   isCollision = true
+          //   console.log('touch 1');
+          //   matrixFillTable(matris)
+          // }
         } catch (e) {
           isCollision = true
+          matrixFillTable(matris)
           return isCollision
         } finally {
 
