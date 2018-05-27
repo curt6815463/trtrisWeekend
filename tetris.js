@@ -16,7 +16,7 @@ for(let i = 0 ; i < 20 ; i++){
 }
 const matris = {
   point:{
-    x: 0,
+    x: 5,
     y: 0
   },
   shape:[
@@ -26,7 +26,6 @@ const matris = {
   ]
 }
  function matrixFillTable(matris){
-   console.log(matris.point.y);
 
   matris.shape.forEach((row, y) => {
     row.forEach((value ,x) => {
@@ -35,15 +34,12 @@ const matris = {
       }
     })
   })
-  console.log(contextTable);
 }
 //偵測底部有沒有撞到
 function isCollision(matris) {
   let isCollision = false
   matris.shape.forEach((row, y) => {
     row.forEach((value, x) => {
-      // console.log(matris.shape[y][x]);
-      // console.log(value);
       if(value === 1){
         try {
           if(contextTable[y+matris.point.y+1][x+matris.point.x] !== 0){
@@ -51,12 +47,6 @@ function isCollision(matris) {
             isCollision = true
             return isCollision
           }
-          // console.log(contextTable[y+matris.point.y+1][x+matris.point.x]);
-          // else if(contextTable[y+matris.point.y+1][x+matris.point.x] === 1){
-          //   isCollision = true
-          //   console.log('touch 1');
-          //   matrixFillTable(matris)
-          // }
         } catch (e) {
           isCollision = true
           matrixFillTable(matris)
@@ -70,6 +60,34 @@ function isCollision(matris) {
   })
   return isCollision
 }
+
+//偵測左右碰撞
+function horizontalCollision(matris, offsetX) {
+  let isCollision = false
+  matris.shape.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if(value === 1){
+        try {
+          console.log(y+matris.point.y,x+matris.point.x + offsetX);
+          if(contextTable[y+matris.point.y][x+matris.point.x + offsetX] !== 0){
+
+            isCollision = true
+            return isCollision
+          }
+        } catch (e) {
+          isCollision = true
+          return isCollision
+        } finally {
+
+        }
+
+      }
+    })
+  })
+  console.log(isCollision);
+  return isCollision
+}
+
 function drawMatris(matris) {
   allMatris.forEach((matris, index) => {
     matris.shape.forEach((row, y) => {
@@ -91,51 +109,25 @@ function matrisHorizontalMove(matris,offsetX){
   matris.point.x = matris.point.x + offsetX
   drawMatris(matris)
 }
-function matrisHorizontalMoveCondition(matris,offsetX) {
-  switch (isTouchBoundary(matris)) {
-    case 'left side':
-      if(offsetX === 1){
-        matrisHorizontalMove(matris,offsetX)
-      }
-      break;
-    case 'right side':
-      if(offsetX === -1){
-        matrisHorizontalMove(matris,offsetX)
-      }
-      break;
-    case 'no touch':
-      matrisHorizontalMove(matris,offsetX)
-      break;
-    default:
 
-  }
-}
 
-function isTouchBoundary(matris) {
-  if(matris.point.x === 0){
-    return 'left side'
-  }
-  else if(matris.point.x === 9){
-    return 'right side'
-  }
-  else {
-    return 'no touch'
-  }
-}
+
 
 document.addEventListener('keydown', function(e) {
   switch (e.keyCode) {
     case 38:
-      console.log('up');
       break;
     case 40:
-      console.log('down');
       break;
     case 37:
-      matrisHorizontalMoveCondition(allMatris[matrisCurrentIndex],-1)
+      if(!horizontalCollision(allMatris[matrisCurrentIndex],-1)){
+        matrisHorizontalMove(allMatris[matrisCurrentIndex],-1)
+      }
       break;
     case 39:
-      matrisHorizontalMoveCondition(allMatris[matrisCurrentIndex],1)
+      if(!horizontalCollision(allMatris[matrisCurrentIndex],1)){
+        matrisHorizontalMove(allMatris[matrisCurrentIndex],1)
+      }
       break;
     default:
 
