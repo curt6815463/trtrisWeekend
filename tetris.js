@@ -300,7 +300,33 @@ function step(timestamp) {
       requestAnimationFrame(step)
     }
     else {
-      allMatris.push(JSON.parse(JSON.stringify(matris)))
+      let randTypeIndex = Math.floor(Math.random() * (7 - 1 + 1)) + 1;
+      switch (randTypeIndex) {
+        case 1:
+          allMatris.push(JSON.parse(JSON.stringify(matrisO)))
+          break;
+        case 2:
+          allMatris.push(JSON.parse(JSON.stringify(matrisI)))
+          break;
+        case 3:
+          allMatris.push(JSON.parse(JSON.stringify(matrisS)))
+          break;
+        case 4:
+          allMatris.push(JSON.parse(JSON.stringify(matrisZ)))
+          break;
+        case 5:
+          allMatris.push(JSON.parse(JSON.stringify(matrisL)))
+          break;
+        case 6:
+          allMatris.push(JSON.parse(JSON.stringify(matrisJ)))
+          break;
+        case 7:
+          allMatris.push(JSON.parse(JSON.stringify(matrisT)))
+          break;
+        default:
+
+      }
+      // allMatris.push(JSON.parse(JSON.stringify(matris)))
       matrisCurrentIndex ++
       requestAnimationFrame(step)
     }
