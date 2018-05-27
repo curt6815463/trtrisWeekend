@@ -25,12 +25,17 @@ const matris = {
     [0, 1, 0],
   ]
 }
-function matrixFillTable(){
-  
+ function matrixFillTable(matris){
+  matris.shape.forEach((row, y) => {
+    row.forEach((value ,x) => {
+
+    })
+  })
 }
 //偵測底部有沒有撞到
 function isCollision(matris) {
   let isCollision = false
+  console.log(matris.point.y);
   matris.shape.forEach((row, y) => {
     row.forEach((value, x) => {
       // console.log(matris.shape[y][x]);
@@ -42,7 +47,6 @@ function isCollision(matris) {
           }
         } catch (e) {
           isCollision = true
-          contextTable[]
           return isCollision
         } finally {
 
@@ -138,9 +142,9 @@ drawMatris(allMatris[matrisCurrentIndex])
 
 
 function step(timestamp) {
-  if(!isCollision(allMatris[matrisCurrentIndex])){
-    stepTime = new Date().getTime()
-    if(stepTime - now > 100){
+  stepTime = new Date().getTime()
+  if(stepTime - now > 100){
+    if(!isCollision(allMatris[matrisCurrentIndex])){
       context.fillStyle = '#000'
       context.fillRect(0, 0, canvas.width, canvas.height)
       context.fillStyle = 'red'
@@ -150,14 +154,36 @@ function step(timestamp) {
       requestAnimationFrame(step)
     }
     else {
+      allMatris.push(JSON.parse(JSON.stringify(matris)))
+      matrisCurrentIndex ++
       requestAnimationFrame(step)
     }
   }
   else {
-    allMatris.push(JSON.parse(JSON.stringify(matris)))
-    matrisCurrentIndex ++
     requestAnimationFrame(step)
+
   }
+
+  // if(!isCollision(allMatris[matrisCurrentIndex])){
+  //   stepTime = new Date().getTime()
+  //   if(stepTime - now > 100){
+  //     context.fillStyle = '#000'
+  //     context.fillRect(0, 0, canvas.width, canvas.height)
+  //     context.fillStyle = 'red'
+  //     allMatris[matrisCurrentIndex].point.y ++
+  //     drawMatris(allMatris[matrisCurrentIndex])
+  //     now = new Date().getTime()
+  //     requestAnimationFrame(step)
+  //   }
+  //   else {
+  //     requestAnimationFrame(step)
+  //   }
+  // }
+  // else {
+  //   allMatris.push(JSON.parse(JSON.stringify(matris)))
+  //   matrisCurrentIndex ++
+  //   requestAnimationFrame(step)
+  // }
 }
 var now = new Date().getTime()
 requestAnimationFrame(step);
