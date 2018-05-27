@@ -5,9 +5,15 @@ context.fillStyle = '#000'
 context.scale(20,20)
 context.fillRect(0, 0, canvas.width, canvas.height)
 
-allMatris = []
-matrisCurrentIndex = 0
-
+var allMatris = []
+var matrisCurrentIndex = 0
+var contextTable = []
+for(let i = 0 ; i < 20 ; i++){
+  contextTable[i] = []
+  for(let j = 0 ; j < 12 ; j++){
+    contextTable[i][j] = 0
+  }
+}
 const matris = {
   point:{
     x: 0,
@@ -19,8 +25,34 @@ const matris = {
     [0, 1, 0],
   ]
 }
+function matrixFillTable(){
+  
+}
+//偵測底部有沒有撞到
+function isCollision(matris) {
+  let isCollision = false
+  matris.shape.forEach((row, y) => {
+    row.forEach((value, x) => {
+      // console.log(matris.shape[y][x]);
+      // console.log(value);
+      if(value === 1){
+        try {
+          if(contextTable[y+matris.point.y+1][x+matris.point.x] !== 0){
+            isCollision = true
+          }
+        } catch (e) {
+          isCollision = true
+          contextTable[]
+          return isCollision
+        } finally {
 
+        }
 
+      }
+    })
+  })
+  return isCollision
+}
 function drawMatris(matris) {
   allMatris.forEach((matris, index) => {
     matris.shape.forEach((row, y) => {
@@ -106,7 +138,7 @@ drawMatris(allMatris[matrisCurrentIndex])
 
 
 function step(timestamp) {
-  if(!isTouchBottom(allMatris[matrisCurrentIndex])){
+  if(!isCollision(allMatris[matrisCurrentIndex])){
     stepTime = new Date().getTime()
     if(stepTime - now > 100){
       context.fillStyle = '#000'
