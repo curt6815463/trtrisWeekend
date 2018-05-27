@@ -8,6 +8,8 @@ context.fillRect(0, 0, canvas.width, canvas.height)
 var allMatris = []
 var matrisCurrentIndex = 0
 var contextTable = []
+var deformIndex = 0
+
 for(let i = 0 ; i < 20 ; i++){
   contextTable[i] = []
   for(let j = 0 ; j < 12 ; j++){
@@ -19,15 +21,40 @@ const matris = {
     x: 5,
     y: 0
   },
-  shape:[
+  shapeType:0,
+  shape:[[
     [0, 0, 0],
     [1, 1, 1],
     [0, 1, 0],
-  ]
+  ],[
+    [0, 1, 0],
+    [1, 1, 0],
+    [0, 1, 0],
+  ],[
+    [0, 1, 0],
+    [1, 1, 1],
+    [0, 0, 0],
+  ],[
+    [0, 1, 0],
+    [0, 1, 1],
+    [0, 1, 0],
+  ]]
 }
- function matrixFillTable(matris){
 
-  matris.shape.forEach((row, y) => {
+function deform(matris) {
+  // console.log(deformIndex);
+  // console.log(deformIndex);
+  if(deformIndex === matris.shape.length-1){
+    deformIndex=0
+  }
+  else {
+    deformIndex++
+  }
+}
+
+function matrixFillTable(matris){
+
+  matris.shape[deformIndex].forEach((row, y) => {
     row.forEach((value ,x) => {
       if(value === 1){
         contextTable[y+matris.point.y][x+matris.point.x] = 1
@@ -38,7 +65,7 @@ const matris = {
 //偵測底部有沒有撞到
 function isCollision(matris) {
   let isCollision = false
-  matris.shape.forEach((row, y) => {
+  matris.shape[deformIndex].forEach((row, y) => {
     row.forEach((value, x) => {
       if(value === 1){
         try {
@@ -64,7 +91,7 @@ function isCollision(matris) {
 //偵測左右碰撞
 function horizontalCollision(matris, offsetX) {
   let isCollision = false
-  matris.shape.forEach((row, y) => {
+  matris.shape[deformIndex].forEach((row, y) => {
     row.forEach((value, x) => {
       if(value === 1){
         try {
@@ -90,7 +117,7 @@ function horizontalCollision(matris, offsetX) {
 
 function drawMatris(matris) {
   allMatris.forEach((matris, index) => {
-    matris.shape.forEach((row, y) => {
+    matris.shape[deformIndex].forEach((row, y) => {
       row.forEach((value, x) => {
         if(value === 1){
           context.fillStyle = 'red'
@@ -116,6 +143,7 @@ function matrisHorizontalMove(matris,offsetX){
 document.addEventListener('keydown', function(e) {
   switch (e.keyCode) {
     case 38:
+      deform(allMatris[matrisCurrentIndex])
       break;
     case 40:
       break;
