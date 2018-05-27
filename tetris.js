@@ -16,12 +16,78 @@ for(let i = 0 ; i < 20 ; i++){
     contextTable[i][j] = 0
   }
 }
-const matris = {
+const matrisL = {
   point:{
     x: 5,
     y: 0
   },
-  shapeType:0,
+  shapeTypeIndex:0,
+  shape:[[
+    [1, 0, 0],
+    [1, 0, 0],
+    [1, 1, 0],
+  ],[
+    [1, 1, 1],
+    [1, 0, 0],
+    [0, 0, 0],
+  ],[
+    [0, 1, 1],
+    [0, 0, 1],
+    [0, 0, 1],
+  ],[
+    [0, 0, 0],
+    [0, 0, 1],
+    [1, 1, 1],
+  ]]
+}
+const matrisJ = {
+  point:{
+    x: 5,
+    y: 0
+  },
+  shapeTypeIndex:0,
+  shape:[[
+    [0, 0, 1],
+    [0, 0, 1],
+    [0, 1, 1],
+  ],[
+    [1, 1, 1],
+    [0, 0, 1],
+    [0, 0, 0],
+  ],[
+    [1, 1, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+  ],[
+    [0, 0, 0],
+    [1, 0, 0],
+    [1, 1, 1],
+  ]]
+}
+const matrisI = {
+  point:{
+    x: 5,
+    y: 0
+  },
+  shapeTypeIndex:0,
+  shape:[[
+    [0, 1, 0, 0],
+    [0, 1, 0, 0],
+    [0, 1, 0, 0],
+    [0, 1, 0, 0]
+  ],[
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [1, 1, 1, 1],
+    [0, 0, 0, 0]
+  ]]
+}
+const matrisT = {
+  point:{
+    x: 5,
+    y: 0
+  },
+  shapeTypeIndex:0,
   shape:[[
     [0, 0, 0],
     [1, 1, 1],
@@ -41,20 +107,67 @@ const matris = {
   ]]
 }
 
+const matrisS = {
+  point:{
+    x: 5,
+    y: 0
+  },
+  shapeTypeIndex:0,
+  shape:[[
+    [0, 0, 0],
+    [0, 1, 1],
+    [1, 1, 0],
+  ],[
+    [1, 0, 0],
+    [1, 1, 0],
+    [0, 1, 0],
+  ]]
+}
+
+const matrisZ = {
+  point:{
+    x: 5,
+    y: 0
+  },
+  shapeTypeIndex:0,
+  shape:[[
+    [0, 0, 0],
+    [1, 1, 0],
+    [0, 1, 1],
+  ],[
+    [0, 1, 0],
+    [0, 1, 1],
+    [0, 0, 1],
+  ]]
+}
+const matrisO = {
+  point:{
+    x: 5,
+    y: 0
+  },
+  shapeTypeIndex:0,
+  shape:[[
+    [1, 1],
+    [1, 1]
+  ]]
+}
+
+matris = matrisI
+
 function deform(matris) {
   // console.log(deformIndex);
   // console.log(deformIndex);
-  if(deformIndex === matris.shape.length-1){
-    deformIndex=0
+  if(matris.shapeTypeIndex === matris.shape.length-1){
+    matris.shapeTypeIndex = 0
   }
   else {
-    deformIndex++
+    matris.shapeTypeIndex ++
   }
 }
 
 function matrixFillTable(matris){
 
-  matris.shape[deformIndex].forEach((row, y) => {
+  matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
     row.forEach((value ,x) => {
       if(value === 1){
         contextTable[y+matris.point.y][x+matris.point.x] = 1
@@ -65,7 +178,7 @@ function matrixFillTable(matris){
 //偵測底部有沒有撞到
 function isCollision(matris) {
   let isCollision = false
-  matris.shape[deformIndex].forEach((row, y) => {
+  matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
     row.forEach((value, x) => {
       if(value === 1){
         try {
@@ -91,11 +204,11 @@ function isCollision(matris) {
 //偵測左右碰撞
 function horizontalCollision(matris, offsetX) {
   let isCollision = false
-  matris.shape[deformIndex].forEach((row, y) => {
+  matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
     row.forEach((value, x) => {
       if(value === 1){
         try {
-          console.log(y+matris.point.y,x+matris.point.x + offsetX);
+          // console.log(y+matris.point.y,x+matris.point.x + offsetX);
           if(contextTable[y+matris.point.y][x+matris.point.x + offsetX] !== 0){
 
             isCollision = true
@@ -111,13 +224,13 @@ function horizontalCollision(matris, offsetX) {
       }
     })
   })
-  console.log(isCollision);
+  // console.log(isCollision);
   return isCollision
 }
 
 function drawMatris(matris) {
   allMatris.forEach((matris, index) => {
-    matris.shape[deformIndex].forEach((row, y) => {
+    matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
       row.forEach((value, x) => {
         if(value === 1){
           context.fillStyle = 'red'
@@ -196,27 +309,6 @@ function step(timestamp) {
     requestAnimationFrame(step)
 
   }
-
-  // if(!isCollision(allMatris[matrisCurrentIndex])){
-  //   stepTime = new Date().getTime()
-  //   if(stepTime - now > 100){
-  //     context.fillStyle = '#000'
-  //     context.fillRect(0, 0, canvas.width, canvas.height)
-  //     context.fillStyle = 'red'
-  //     allMatris[matrisCurrentIndex].point.y ++
-  //     drawMatris(allMatris[matrisCurrentIndex])
-  //     now = new Date().getTime()
-  //     requestAnimationFrame(step)
-  //   }
-  //   else {
-  //     requestAnimationFrame(step)
-  //   }
-  // }
-  // else {
-  //   allMatris.push(JSON.parse(JSON.stringify(matris)))
-  //   matrisCurrentIndex ++
-  //   requestAnimationFrame(step)
-  // }
 }
 var now = new Date().getTime()
 requestAnimationFrame(step);
