@@ -155,8 +155,6 @@ const matrisO = {
 matris = matrisI
 
 function deform(matris) {
-  // console.log(deformIndex);
-  // console.log(deformIndex);
   if(matris.shapeTypeIndex === matris.shape.length-1){
     matris.shapeTypeIndex = 0
   }
@@ -164,22 +162,68 @@ function deform(matris) {
     matris.shapeTypeIndex ++
   }
 }
+function moveRow(fullRowIndex) {
+  // console.log('moveRow');
+  let contextTableTemp = JSON.parse(JSON.stringify(contextTable))
+  fullRowIndex.some((index) => {
+    // contextTable.some((row, y) => {
+      for(let i = index ; i >= 0 ; i--){
+        if(i === 0){
+          contextTableTemp[0] = [0,0,0,0,0,0,0,0,0,0,0,0]
+        }
+        else {
+          contextTableTemp[i] = JSON.parse(JSON.stringify(contextTableTemp[i-1]))
+        }
+      }
+    // })
+
+  })
+  // console.log(contextTableTemp);
+  contextTable = JSON.parse(JSON.stringify(contextTableTemp))
+  fullRowIndex.some((index) => {
+    console.log(index);
+    context.fillStyle = '#000'
+    context.fillRect(0, index, 1,1)
+  })
+  // matrixFillTable
+}
+
+function clearFullRow() {
+  let fullRowIndex = []
+  contextTable.some((row , y) => {
+    let isFull = true
+    row.some((value, x) => {
+      if(value === 0){
+        isFull = false
+      }
+    })
+    if(isFull){
+      fullRowIndex.push(y)
+    }
+  })
+  if(fullRowIndex.length !== 0){
+    moveRow(fullRowIndex)
+  }
+  // console.log(fullRowIndex);
+
+}
 
 function matrixFillTable(matris){
 
-  matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
-    row.forEach((value ,x) => {
+  matris.shape[matris.shapeTypeIndex].some((row, y) => {
+    row.some((value ,x) => {
       if(value === 1){
         contextTable[y+matris.point.y][x+matris.point.x] = 1
       }
     })
   })
+  clearFullRow()
 }
 //偵測底部有沒有撞到
 function isCollision(matris) {
   let isCollision = false
-  matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
-    row.forEach((value, x) => {
+  matris.shape[matris.shapeTypeIndex].some((row, y) => {
+    row.some((value, x) => {
       if(value === 1){
         try {
           if(contextTable[y+matris.point.y+1][x+matris.point.x] !== 0){
@@ -188,6 +232,7 @@ function isCollision(matris) {
             return isCollision
           }
         } catch (e) {
+
           isCollision = true
           matrixFillTable(matris)
           return isCollision
@@ -204,11 +249,11 @@ function isCollision(matris) {
 //偵測左右碰撞
 function horizontalCollision(matris, offsetX) {
   let isCollision = false
-  matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
-    row.forEach((value, x) => {
+  matris.shape[matris.shapeTypeIndex].some((row, y) => {
+    row.some((value, x) => {
       if(value === 1){
         try {
-          // console.log(y+matris.point.y,x+matris.point.x + offsetX);
+
           if(contextTable[y+matris.point.y][x+matris.point.x + offsetX] !== 0){
 
             isCollision = true
@@ -224,19 +269,26 @@ function horizontalCollision(matris, offsetX) {
       }
     })
   })
-  // console.log(isCollision);
   return isCollision
 }
 
 function drawMatris(matris) {
-  allMatris.forEach((matris, index) => {
-    matris.shape[matris.shapeTypeIndex].forEach((row, y) => {
-      row.forEach((value, x) => {
+  // allMatris.some((matris, index) => {
+    matris.shape[matris.shapeTypeIndex].some((row, y) => {
+      row.some((value, x) => {
         if(value === 1){
           context.fillStyle = 'red'
           context.fillRect(x+matris.point.x,y+matris.point.y,1,1)
         }
       })
+    })
+  // })
+  contextTable.some((row , y) => {
+    row.some((value, x) => {
+      if(value === 1){
+        context.fillStyle = 'red'
+        context.fillRect(x,y,1,1)
+      }
     })
   })
 }
@@ -301,6 +353,7 @@ function step(timestamp) {
     }
     else {
       let randTypeIndex = Math.floor(Math.random() * (7 - 1 + 1)) + 1;
+      // randTypeIndex = 2
       switch (randTypeIndex) {
         case 1:
           allMatris.push(JSON.parse(JSON.stringify(matrisO)))
